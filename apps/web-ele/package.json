@@ -43,8 +43,14 @@
     "@vueuse/core": "catalog:",
     "dayjs": "catalog:",
     "element-plus": "catalog:",
+    "js-md5": "^0.8.3",
+    "lodash": "^4.17.21",
     "pinia": "catalog:",
+    "sm-crypto": "^0.3.13",
+    "sortable": "^2.0.0",
+    "uuid": "^11.0.5",
     "vue": "catalog:",
+    "vue-json-viewer": "^2.2.22",
     "vue-router": "catalog:"
   },
   "devDependencies": {

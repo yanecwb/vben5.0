@@ -15,7 +15,7 @@ import { $t } from '#/locales';
 const forbiddenComponent = () => import('#/views/_core/fallback/forbidden.vue');
 
 async function generateAccess(options: GenerateMenuAndRoutesOptions) {
-  const pageMap: ComponentRecordType = import.meta.glob('../views/**/*.vue');
+  const pageMap: ComponentRecordType = import.meta.glob('../views/**/*.{vue,tsx}');
 
   const layoutMap: ComponentRecordType = {
     BasicLayout,

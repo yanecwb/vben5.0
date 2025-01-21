@@ -9,7 +9,7 @@ export namespace AuthApi {
 
   /** 登录接口返回值 */
   export interface LoginResult {
-    accessToken: string;
+    access_token: string;
   }
 
   export interface RefreshTokenResult {
@@ -21,9 +21,8 @@ export namespace AuthApi {
 /**
  * 登录
  */
-export async function loginApi(data: AuthApi.LoginParams) {
-  return requestClient.post<AuthApi.LoginResult>('/auth/login', data);
-}
+export const loginApi =  async  (data: AuthApi.LoginParams)=> requestClient.post<AuthApi.LoginResult>(`/auth/oauth/token?username=${data.username}&password=${data.password}&grant_type=password&scope=server`);
+
 
 /**
  * 刷新accessToken
@@ -49,3 +48,9 @@ export async function logoutApi() {
 export async function getAccessCodesApi() {
   return requestClient.get<string[]>('/auth/codes');
 }
+
+
+/**
+ * 获取动态路由树
+ */
+export const getAccessRouterTreeApi = ()=> requestClient.get<any>('/admin/menu/currentUser/tree')

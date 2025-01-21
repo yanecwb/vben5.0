@@ -2,6 +2,7 @@ import { computed } from 'vue';
 
 import { preferences, updatePreferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
+import { isArray } from '@vben/utils';
 
 function useAccess() {
   const accessStore = useAccessStore();
@@ -26,11 +27,15 @@ function useAccess() {
    * @description: Determine whether there is permission，The permission code is judged by the user's permission code
    * @param codes
    */
-  function hasAccessByCodes(codes: string[]) {
+  function hasAccessByCodes(codes: string[] | string) {
     const userCodesSet = new Set(accessStore.accessCodes);
 
-    const intersection = codes.filter((item) => userCodesSet.has(item));
-    return intersection.length > 0;
+    if (isArray(codes)) {
+      const intersection = codes.filter((item) => userCodesSet.has(item));
+      return intersection.length > 0;
+    } else if (typeof codes === 'string') {
+      return userCodesSet.has(codes);
+    }
   }
 
   async function toggleAccessMode() {

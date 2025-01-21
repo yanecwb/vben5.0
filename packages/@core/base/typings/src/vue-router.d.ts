@@ -124,10 +124,24 @@ type RouteRecordStringComponent<T = string> = Omit<
   component: T;
 };
 
+export interface MenuRoute extends RouteRecordStringComponent {
+  id: number;
+  parentId: number;
+  children: MenuRoute[];
+  name: string;
+  href: string;
+  component: string | undefined;
+  label: string;
+  keepAlive: number;
+  icon: string;
+  [key: string]: any; // 允许额外字段
+};
+
+
 type ComponentRecordType = Record<string, () => Promise<Component>>;
 
 interface GenerateMenuAndRoutesOptions {
-  fetchMenuListAsync?: () => Promise<RouteRecordStringComponent[]>;
+  fetchMenuListAsync?: () => Promise<MenuRoute[]>;
   forbiddenComponent?: RouteRecordRaw['component'];
   layoutMap?: ComponentRecordType;
   pageMap?: ComponentRecordType;

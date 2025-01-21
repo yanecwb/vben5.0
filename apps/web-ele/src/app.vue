@@ -12,6 +12,8 @@ useElementPlusDesignTokens();
 
 <template>
   <ElConfigProvider :locale="elementLocale">
-    <RouterView />
+    <div class="bg-[#F1F3F6] h-screen">
+      <RouterView />
+    </div>
   </ElConfigProvider>
 </template>

@@ -128,8 +128,8 @@ watch(
       <UserDropdown
         :avatar
         :menus
-        :text="userStore.userInfo?.realName"
-        description="ann.vben@gmail.com"
+        :text="userStore.userInfo?.nickname"
+        :description="userStore.userInfo?.username"
         tag-text="Pro"
         @logout="handleLogout"
       />

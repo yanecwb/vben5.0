@@ -12,15 +12,17 @@ export default defineConfig(async () => {
         }),
       ],
       server: {
-        proxy: {
-          '/api': {
-            changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/api/, ''),
-            // mock代理目标地址
-            target: 'http://localhost:5320/api',
-            ws: true,
-          },
-        },
+        // proxy: {
+        //   '/api': {
+        //     changeOrigin: true,
+        //     rewrite: (path) => path.replace(/^\/api/, ''),
+
+        //     // 代理目标地址
+        //     target: 'https://api-test.adspaw.com/api',
+            
+        //     ws: true,
+        //   },
+        // },
       },
     },
   };

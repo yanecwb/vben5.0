@@ -82,6 +82,16 @@ export const useAccessStore = defineStore('core-access', {
     setRefreshToken(token: AccessToken) {
       this.refreshToken = token;
     },
+    accessReset(){
+      this.accessCodes = []
+      this.accessMenus = []
+      this.accessRoutes = []
+      this.accessCodes = []
+      this.accessToken= null
+      this.isAccessChecked =false
+      this.loginExpired =false
+      this.refreshToken=null
+  }
   },
   persist: {
     // 持久化

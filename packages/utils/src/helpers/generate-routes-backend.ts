@@ -4,6 +4,7 @@ import type {
   ComponentRecordType,
   GenerateMenuAndRoutesOptions,
   RouteRecordStringComponent,
+  MenuRoute,
 } from '@vben-core/typings';
 
 import { mapTree } from '@vben-core/shared/utils';
@@ -17,7 +18,8 @@ async function generateRoutesByBackend(
   const { fetchMenuListAsync, layoutMap = {}, pageMap = {} } = options;
 
   try {
-    const menuRoutes = await fetchMenuListAsync?.();
+    const menuRoutes = transformMenuRoutes(await fetchMenuListAsync?.());
+
     if (!menuRoutes) {
       return [];
     }
@@ -29,7 +31,6 @@ async function generateRoutesByBackend(
     }
 
     const routes = convertRoutes(menuRoutes, layoutMap, normalizePageMap);
-
     return routes;
   } catch (error) {
     console.error(error);
@@ -44,24 +45,22 @@ function convertRoutes(
 ): RouteRecordRaw[] {
   return mapTree(routes, (node) => {
     const route = node as unknown as RouteRecordRaw;
-    const { component, name } = node;
+    const { component, name, path } = node;
 
     if (!name) {
       console.error('route name is required', route);
     }
 
     // layout转换
-    if (component && layoutMap[component]) {
+    if (path === '/dashboard') {
+      route.component = pageMap['/dashboard/analytics/index'];
+    } else if (component && layoutMap[component]) {
       route.component = layoutMap[component];
       // 页面组件转换
     } else if (component) {
       const normalizePath = normalizeViewPath(component);
       route.component =
-        pageMap[
-          normalizePath.endsWith('.vue')
-            ? normalizePath
-            : `${normalizePath}.vue`
-        ];
+        pageMap[normalizePath] ?? pageMap['/_core/fallback/not-found'];
     }
 
     return route;
@@ -78,6 +77,42 @@ function normalizeViewPath(path: string): string {
     : `/${normalizedPath}`;
 
   // 这里耦合了vben-admin的目录结构
-  return viewPath.replace(/^\/views/, '');
+  return viewPath.replace(/^\/views/, '').split('.')[0] as string;
 }
+
+// 后续需要该数据结构
+function transformMenuRoutes(
+  menuRoutes?: MenuRoute[],
+  isChildRoute = false,
+  parentPath = '',
+): RouteRecordStringComponent[] {
+  if (!menuRoutes) return [];
+
+  return menuRoutes.map((menuItem) => {
+    const routePath = isChildRoute
+      ? `/${parentPath}/${menuItem.href}`.replace(/\/+/g, '/')
+      : `/${menuItem.href}`.replace(/\/+/g, '/');
+
+    const routeConfig: RouteRecordStringComponent = {
+      component: isChildRoute ? `${routePath}/index` : 'BasicLayout',
+      meta: {
+        title: menuItem.label,
+        icon:
+          menuItem.icon || (isChildRoute ? undefined : 'lucide:codesandbox'),
+        order: menuItem.orderNum,
+        affixTab: isChildRoute ? menuItem.affixTab : undefined,
+        keepAlive: isChildRoute,
+      },
+      name: isChildRoute ? menuItem.href : menuItem.name,
+      path: routePath,
+      redirect: menuItem.redirect,
+      children: menuItem.children?.length
+        ? transformMenuRoutes(menuItem.children, true, menuItem.href)
+        : undefined,
+    };
+
+    return routeConfig;
+  });
+}
+
 export { generateRoutesByBackend };

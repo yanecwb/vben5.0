@@ -18,6 +18,7 @@ withDefaults(defineProps<Props>(), {
   icp: '',
   icpLink: '',
 });
+
 </script>
 
 <template>

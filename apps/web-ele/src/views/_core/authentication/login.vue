@@ -20,7 +20,7 @@ const MOCK_USER_OPTIONS: BasicOption[] = [
   },
   {
     label: 'Admin',
-    value: 'admin',
+    value: 'admin', 
   },
   {
     label: 'User',
@@ -42,7 +42,7 @@ const formSchema = computed((): VbenFormSchema[] => {
         .string()
         .min(1, { message: $t('authentication.selectAccount') })
         .optional()
-        .default('vben'),
+        .default('admin'),
     },
     {
       component: 'VbenInput',
@@ -57,7 +57,7 @@ const formSchema = computed((): VbenFormSchema[] => {
             );
             if (findUser) {
               form.setValues({
-                password: '123456',
+                password: '123321',
                 username: findUser.value,
               });
             }
@@ -94,5 +94,7 @@ const formSchema = computed((): VbenFormSchema[] => {
     :form-schema="formSchema"
     :loading="authStore.loginLoading"
     @submit="authStore.authLogin"
+    :show-code-login="false"
+    :showQrcodeLogin="false"
   />
 </template>

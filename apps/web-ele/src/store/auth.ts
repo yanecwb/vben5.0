@@ -9,7 +9,12 @@ import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 import { ElNotification } from 'element-plus';
 import { defineStore } from 'pinia';
 
-import { getAccessCodesApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
+import {
+  getAccessRouterTreeApi,
+  getUserInfoApi,
+  loginApi,
+  logoutApi,
+} from '#/api';
 import { $t } from '#/locales';
 
 export const useAuthStore = defineStore('auth', () => {
@@ -32,40 +37,43 @@ export const useAuthStore = defineStore('auth', () => {
     let userInfo: null | UserInfo = null;
     try {
       loginLoading.value = true;
-      const { accessToken } = await loginApi(params);
+      const { access_token: accessToken } = await loginApi(params);
 
       // 如果成功获取到 accessToken
       if (accessToken) {
         // 将 accessToken 存储到 accessStore 中
         accessStore.setAccessToken(accessToken);
 
-        // 获取用户信息并存储到 accessStore 中
-        const [fetchUserInfoResult, accessCodes] = await Promise.all([
+        const [fetchUserInfoResult] = await Promise.all([
           fetchUserInfo(),
-          getAccessCodesApi(),
+          // (),
         ]);
+        console.log('accessStore', accessStore);
+
+        // 获取用户信息并存储到 accessStore 中
 
         userInfo = fetchUserInfoResult;
 
         userStore.setUserInfo(userInfo);
-        accessStore.setAccessCodes(accessCodes);
 
         if (accessStore.loginExpired) {
           accessStore.setLoginExpired(false);
         } else {
           onSuccess
             ? await onSuccess?.()
-            : await router.push(userInfo.homePath || DEFAULT_HOME_PATH);
+            : await router.push(userInfo?.homePath || DEFAULT_HOME_PATH);
         }
 
-        if (userInfo?.realName) {
+        if (userInfo?.nickname) {
           ElNotification({
-            message: `${$t('authentication.loginSuccessDesc')}:${userInfo?.realName}`,
+            message: `${$t('authentication.loginSuccessDesc')}:${userInfo?.nickname}`,
             title: $t('authentication.loginSuccess'),
             type: 'success',
           });
         }
       }
+    } catch (e) {
+      console.log(e);
     } finally {
       loginLoading.value = false;
     }
@@ -77,7 +85,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function logout(redirect: boolean = true) {
     try {
-      await logoutApi();
+      // 如果有
+      // await logoutApi();
     } catch {
       // 不做任何处理
     }
@@ -97,9 +106,21 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function fetchUserInfo() {
     let userInfo: null | UserInfo = null;
-    userInfo = await getUserInfoApi();
-    userStore.setUserInfo(userInfo);
+    try {
+      userInfo = await getUserInfoApi();
+      userStore.setUserInfo(userInfo);
+      accessStore.setAccessCodes(userInfo.permissions);
+      // await getAccessRouterTree();
+    } catch(e) {}
     return userInfo;
+  }
+
+  async function getAccessRouterTree() {
+    interface RouterTree {}
+    let routerTree: null | RouterTree = [];
+    routerTree = await getAccessRouterTreeApi();
+    // accessStore.setAccessRoutes
+    return routerTree;
   }
 
   function $reset() {
