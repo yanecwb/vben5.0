@@ -1,5 +1,4 @@
 <template>
-  <div class="dataTables_paginate paging_simple_numbers float-start">
     <ElPagination
       class="mg-20-0-0 flex flex-wrap"
       layout="total, sizes, prev, pager, next, jumper"
@@ -11,7 +10,6 @@
       @current-change="handleChange('current', $event)"
     >
     </ElPagination>
-  </div>
 </template>
 
 <script lang="ts" setup name="Pagination">

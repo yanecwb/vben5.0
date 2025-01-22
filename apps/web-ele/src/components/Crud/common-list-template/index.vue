@@ -1,26 +1,22 @@
 <template>
-  <ElCard>
   <div class="mg-0-0-10">
     <div
       class="display-column justify-content-center"
       style="min-width: 1000px"
     >
-      <div class="row">
-        <!-- header -->
-        <slot name="header"></slot>
-      </div>
       <!-- Left Search -->
-      <div class="display-row">
-        <div class="flex">
-          <slot name="search"></slot>
-          <slot name="custom-search"></slot>
+      <ElCard shadow="hover" class="mb-4">
+        <div class="display-row">
+          <div class="flex">
+            <slot name="search"></slot>
+            <slot name="custom-search"></slot>
+          </div>
+          <div class="mg-0-0-10 text-right">
+            <!-- Right Action -->
+            <slot name="action"></slot>
+          </div>
         </div>
-        <div class="mg-0-0-10 text-right">
-          <!-- Right Action -->
-          <slot name="action"></slot>
-        </div>
-      </div>
-
+      </ElCard>
       <!-- Left Search -->
       <slot name="search-items"></slot>
 
@@ -35,12 +31,13 @@
       <slot name="content"></slot>
 
       <!-- Table data -->
-      <slot name="table"></slot>
-      <!-- pagination -->
-      <slot name="pagination"></slot>
+      <ElCard shadow="hover">
+        <slot name="table"></slot>
+        <!-- pagination -->
+        <slot name="pagination"></slot>
+      </ElCard>
     </div>
   </div>
-  </ElCard>
 </template>
 
 <script lang="ts" setup name="commonListTemplate">

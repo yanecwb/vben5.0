@@ -132,7 +132,7 @@
                   v-model="searchItem.Value.value"
                   type="date"
                   placeholder="请选择时间"
-                  value-format="yyyy-MM-dd"
+                  value-format="YYYY-MM-DD"
                   style="width: 100%"
                   :class="{ 'search-input-border': !searchItem.Default }"
                   @change="(e: any) => emit('change', e)"
@@ -149,7 +149,7 @@
                   start-placeholder="开始时间"
                   end-placeholder="结束时间"
                   :clearable="searchItem.Value.clearable"
-                  value-format="yyyy-MM-dd"
+                  value-format="YYYY-MM-DD"
                   style="width: 100%"
                   :picker-options="pickerQuickOptions"
                   :class="{ 'search-input-border': !searchItem.Default }"
@@ -167,7 +167,7 @@
                   align="right"
                   start-placeholder="开始时间"
                   end-placeholder="结束时间"
-                  value-format="yyyy-MM-dd HH:mm:ss"
+                  value-format="YYYY-MM-DD HH:mm:ss"
                   :default-time="[new Date(0, 0, 0), new Date(23, 59, 59)]"
                   :class="{ 'search-input-border': !searchItem.Default }"
                   @change="(e: any) => emit('change', e)"
@@ -392,10 +392,13 @@ const handleChangeShowSearchItems = (data: string[]) => {
   nextTick(() => handleUnFold(true));
 };
 const offResizeObserverSearch = () => {
-  (window as any).resizeObserverSearch.unobserve(
-    document.querySelector('.search-items-container'),
-  );
-  (window as any).resizeObserverSearch.disconnect();
+  const searchItemsContainer = document.querySelector(
+    '.search-items-container',
+  ) as any;
+  if (searchItemsContainer) {
+    (window as any).resizeObserverSearch.unobserve(searchItemsContainer);
+    (window as any).resizeObserverSearch.disconnect();
+  }
 };
 
 onMounted(() => {
@@ -439,8 +442,8 @@ onUnmounted(() => {
   .search-left-action {
     position: absolute;
     left: 0;
-    height: 34px;
-    line-height: 30px;
+    height: 36px;
+    line-height: 36px;
   }
 
   .search-right-action {
@@ -504,6 +507,10 @@ onUnmounted(() => {
   height: 30px;
   font-size: 13px;
   box-shadow: none;
+
+  &:hover {
+    box-shadow: none !important;
+  }
 }
 
 :deep(.el-input__inner) {

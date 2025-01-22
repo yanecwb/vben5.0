@@ -1,8 +1,5 @@
 <template>
   <CommonListTemplate>
-    <template #header>
-      <slot name="header"></slot>
-    </template>
     <template v-if="searchParam" #search>
       <CrudSearch
         ref="search"
@@ -43,17 +40,19 @@
             <slot name="header-right-action"></slot>
           </div>
         </div>
-        <slot name="dasd"></slot>
+        <slot name="groupby-metrics"></slot>
 
         <CrudTable
           :loading="tableDataLoading"
           :tableData="tableData"
           :tableOption="tableOptions"
+          :height="height"
+          @load="
+            (row, treeNode, resolve) => emit('load', row, treeNode, resolve)
+          "
+          @sort-change="(e) => emit('sortChange', e)"
         >
-          <template
-            v-for="column in slotColumns"
-            v-slot:[column.prop]="{ row }"
-          >
+          <template v-for="column in slotColumns" #[column.prop]="{ row }">
             <slot :name="column.prop" :row="row"></slot>
           </template>
 
@@ -86,7 +85,7 @@ import type {
 } from './types/table';
 import { computed, type PropType } from 'vue';
 
-const emit = defineEmits(['searchValueChange']);
+const emit = defineEmits(['searchValueChange', 'load', 'sortChange']);
 const {
   searchParam,
   tableOptions,
@@ -94,6 +93,7 @@ const {
   tableDataTotal,
   tableDataLoading,
   paginationParams,
+  height,
 } = defineProps({
   searchParam: {
     type: Object as PropType<any>,

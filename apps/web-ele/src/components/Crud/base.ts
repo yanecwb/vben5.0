@@ -19,19 +19,23 @@ import {
   timestamp,
   debounce,
 } from '#/utils/global';
-
 import { shallowRef, ref, computed, watch } from 'vue';
+import { cloneDeep } from '@vben/utils';
+
 export class BaseCrudService {
   constructor({
     tableOptions,
     searchOption,
     sortParams,
+    fieldGroup,
     fetchTableDataList,
     fetchSelectOptions,
   }: BaseCrudServerConstructor) {
     this.tableOptions.value = tableOptions;
     searchOption && (this.searchParam.value = searchOption);
     sortParams && (this.sortParams.value = sortParams);
+    fieldGroup && (this.fieldGroup.value = fieldGroup);
+    this.initShowfields();
     this.getTreeDefaultFields();
     this.fetchTableDataList = fetchTableDataList;
     this.getTableData();
@@ -57,7 +61,7 @@ export class BaseCrudService {
 
   // 分页参数
   public paginationParams = ref<PaginationParams>(createDefPaginationParams());
-  // 排序参
+  // 排序参数
   public sortParams = ref<SortParams>(createEmptySortParams());
 
   // 额外的附加搜索参数
@@ -96,6 +100,7 @@ export class BaseCrudService {
       // 额外附加参数
       ...this.extraParams.value,
     };
+
     if (!this.fieldsMul.value) {
       this.fieldsCurrent.value = this.treeSelectedFields.value;
       params.fields = this.treeSelectedFields.value[0];
@@ -130,6 +135,7 @@ export class BaseCrudService {
       params.descs =
         params.descs && params.descs.filter((item: any) => item !== 'date');
     }
+
     return params;
   });
 
@@ -137,18 +143,20 @@ export class BaseCrudService {
     this.tableDataLoading.value = true;
     try {
       const { records, total }: any = await this.fetchTableDataList?.(
-        this.queryParams.value,
+        cloneDeep(this.queryParams.value),
       );
       this.tableData.value = records;
       this.tableDataTotal.value = total;
+
       if (!this.fieldsMul.value) {
         let groupbyLen =
           this.treeSelectedFields.value.length -
           (this.treeDefaultFields.value.length ? 1 : 0);
+
         this.tableData.value.forEach((item: any, index: number) => {
           item.fieldName = this.treeSelectedFields.value[0];
           item.keyid = String(index) + new Date().getTime();
-          item.fieldsLen = groupbyLen; //groupby筛选项长度
+          item.fieldsLen = groupbyLen; // groupby筛选项长度
           item.hasChildren = !!groupbyLen;
         });
       }
@@ -161,7 +169,7 @@ export class BaseCrudService {
   };
 
   public reloadTableData = () => {
-    // 重置当前页为第一页.
+    // 重置当前页为第一页
     this.paginationParams.value.current = 1;
     // 重新拉取数据
     this.getTableData();
@@ -173,6 +181,13 @@ export class BaseCrudService {
     }, 0);
   };
 
+  initShowfields = () => {
+    this.showfields.value = this.fieldGroup?.value
+      .filter((item: any) => item.value)
+      .map((item: any) => item.prop)
+      .join(',');
+  };
+
   onDisplayFieldValueChange = (fields: string) => {
     this.showfields.value = fields;
     this.reloadTableData();
@@ -180,7 +195,7 @@ export class BaseCrudService {
 
   onSortChange = (sortParams: SortParams) => {
     this.sortParams.value = sortParams;
-    // 当排序参数发生改变时, 需要重置当前页为第一页.
+    // 当排序参数发生改变时, 需要重置当前页为第一页
     // 重新拉取数据
     this.reloadTableData();
   };
@@ -194,10 +209,11 @@ export class BaseCrudService {
     );
   };
 
-  getTreeField(row: any) {
+  getTreeField = (row: any) => {
     let fieldNameItem: any = this.fieldGroup.value.find(
       (ele: any) => ele.prop === row.fieldName,
     );
+
     if (fieldNameItem) {
       if (
         row[fieldNameItem.column[0]] &&
@@ -220,17 +236,21 @@ export class BaseCrudService {
         return row[fieldNameItem.column];
       }
     }
-  }
+  };
 
-  onLoadChange(tree: any, treeNode: any, resolve: any) {
-    console.log(tree, 'tree');
+  onLoadTreeChange = async (
+    tree: any,
+    _: any,
+    resolve: (data: Record<string, any>[]) => void,
+  ): Promise<void> => {
     this.treeSearchParams.value = {};
 
     let fieldNameIndex = this.treeSelectedFields.value.findIndex(
       (item: any) => item === tree.fieldName,
     );
+
     let fields = this.treeSelectedFields.value.filter(
-      (item: any, index: number) => index <= fieldNameIndex + 1,
+      (_: any, index: number) => index <= fieldNameIndex + 1,
     );
 
     this.fieldGroup.value.forEach((item: any) => {
@@ -251,49 +271,44 @@ export class BaseCrudService {
     let hourItem = this.fieldGroup.value.find(
       (item: any) => item.prop === 'hour',
     );
+
     if (hourItem && fields.includes('hour') && fields.length >= 2) {
       this.treeSearchParams.value[hourItem.column[1]] =
         tree[hourItem.column[0]];
       this.treeSearchParams.value[hourItem.column[2]] =
         tree[hourItem.column[0]];
     }
-    this.fetchTableDataList({
-      ...this.queryParams.value,
-      fields: fields.join(','),
-      ...this.treeSearchParams,
-      size: 1000,
-    }).then((res: any) => {
-      let data = res.list;
-      data.forEach((item: any, index: number) => {
-        item.fieldName =
-          this.treeSelectedFields.value[
-            this.treeSelectedFields.value.length - tree.fieldsLen
-          ];
-        item.keyid =
-          tree.keyid.slice(0, 1) + String(index) + new Date().getTime();
-        item.fieldsLen = tree.fieldsLen - 1;
-        item.hasChildren = item.fieldsLen > 0;
-      });
-      resolve(data);
-    });
-  }
 
-  private debounced = debounce((excute: Function) => {
-    excute();
+    const req = {
+      ...cloneDeep(this.queryParams.value),
+      fields: fields.join(','),
+      ...this.treeSearchParams.value,
+      size: 1000,
+    };
+
+    const { records }: any = await this.fetchTableDataList(req);
+    records.forEach((item: any, index: number) => {
+      item.fieldName =
+        this.treeSelectedFields.value[
+          this.treeSelectedFields.value.length - tree.fieldsLen
+        ];
+      item.keyid =
+        tree.keyid.slice(0, 1) + String(index) + new Date().getTime();
+      item.fieldsLen = tree.fieldsLen - 1;
+      item.hasChildren = item.fieldsLen > 0;
+    });
+    return resolve(records);
+  };
+
+  private debounced = debounce((execute: Function) => {
+    execute();
   }, 100);
 
-  public setExtraParams(extraParams: any) {
+  public setExtraParams = (extraParams: any) => {
     this.extraParams.value = extraParams;
-  }
+  };
 
-  // onClearSort() {
-  //   if (this.$refs.table && (this.$refs.table as any).$refs.table) {
-  //     let tableKey = (this.$refs.table as any).$refs.table.tableKey
-  //     ;(this.$refs.table as any).$refs.table.$refs[tableKey].clearSort()
-  //   }
-  // }
-
-  onSelectionChange(selectedRows: any[]) {
+  onSelectionChange = (selectedRows: any[]) => {
     this.selectedRows.value = selectedRows;
-  }
+  };
 }

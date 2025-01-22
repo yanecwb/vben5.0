@@ -79,7 +79,7 @@ export interface DisplayFieldDisabled {
 
 export interface TableOptions {
   readonly title?: string;
-  readonly menu: boolean;
+  readonly menu?: boolean;
   readonly align: ColumnAlign;
   readonly selection?: boolean;
   readonly draggable?: boolean;
@@ -92,7 +92,8 @@ export interface TableOptions {
   readonly fontSize?: string;
   readonly tableRowClassName?: ColumnCls<string>;
   multHeader?: boolean;
-  actionWidth?:number
+  actionWidth?: number;
+  actionFixed?: 'right' | 'left';
 }
 
 export interface PaginationParams {
@@ -109,6 +110,7 @@ export interface BaseCrudServerConstructor {
   tableOptions: TableOptions;
   searchOption?: SearchParam;
   sortParams?: SortParams;
+  fieldGroup?: any[];
   fetchTableDataList: (searchParam: any) => Promise<any>;
   fetchSelectOptions?: () => void;
 }

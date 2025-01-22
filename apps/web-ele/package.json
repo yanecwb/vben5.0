@@ -51,7 +51,8 @@
     "uuid": "^11.0.5",
     "vue": "catalog:",
     "vue-json-viewer": "^2.2.22",
-    "vue-router": "catalog:"
+    "vue-router": "catalog:",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "unplugin-element-plus": "catalog:"

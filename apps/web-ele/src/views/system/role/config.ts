@@ -4,13 +4,8 @@ import {
   SearchItemBuild,
   SearchParam,
   SearchParamBuild,
-  SelectValue,
-  DateRangeValue,
-  MultiSelectValue,
 } from '#/components/Crud/models/search';
-import { DateValueType } from '#/components/Crud/types/search';
-import { dayAgoDate, formatDateTime } from '#/utils/global';
-import { queryRoles } from './service';
+import { formatDateTime } from '#/utils/global';
 export const tableOptions = (): TableOptions => {
   return {
     menu: true,
@@ -53,88 +48,14 @@ export const searchOption = (): SearchParam => {
     .setShowMoreFilterBtn(false)
     .add(
       new SearchItemBuild()
-        .setLabel('日期')
+        .setLabel('角色名称')
         .setDefault(true)
-        .setPlaceholder('请选择')
-        .setValue(
-          new DateRangeValue(
-            'date',
-            ['statDateStart', 'statDateEnd'],
-            [dayAgoDate(6), dayAgoDate(0)],
-            DateValueType.String,
-            false,
-          ),
-        )
-        .build(),
-    )
-    .add(
-      new SearchItemBuild()
-        .setLabel('国家')
-        .setDefault(false)
         .setPlaceholder('请输入')
-        .setValue(new InputValue('countryCode'))
-        .build(),
-    )
-    .add(
-      new SearchItemBuild()
-        .setLabel('渠道BD')
-        .setDefault(false)
-        .setPlaceholder('请选择')
-        .setValue(new SelectValue('publisherBdId'))
-        .build(),
-    )
-    .add(
-      new SearchItemBuild()
-        .setLabel('渠道')
-        .setDefault(true)
-        .setPlaceholder('请选择')
-        .setValue(new SelectValue('publisherId'))
-        .build(),
-    )
-    .add(
-      new SearchItemBuild()
-        .setLabel('App')
-        .setDefault(true)
-        .setPlaceholder('请选择')
-        .setValue(new SelectValue('appId'))
-        .build(),
-    )
-    .add(
-      new SearchItemBuild()
-        .setLabel('Ad Unit')
-        .setDefault(true)
-        .setPlaceholder('请选择Ad Unit')
-        .setValue(new SelectValue('adUnitId'))
-        .build(),
-    )
-    .add(
-      new SearchItemBuild()
-        .setLabel('Partner')
-        .setDefault(false)
-        .setPlaceholder('请选择Partner')
-        .setValue(new SelectValue('partnerId'))
-        .build(),
-    )
-    .add(
-      new SearchItemBuild()
-        .setLabel('Partner APP')
-        .setDefault(false)
-        .setPlaceholder('请选择Partner APP')
-        .setValue(new MultiSelectValue('partnerAppId'))
-        .setApi(queryRoles)
-        .build(),
-    )
-    .add(
-      new SearchItemBuild()
-        .setLabel('Partner AdUnit')
-        .setDefault(false)
-        .setPlaceholder('请选择Partner AdUnit')
-        .setValue(new SelectValue('partnerAdUnitId'))
+        .setValue(new InputValue('name'))
         .build(),
     )
     .build();
 };
-
 export function initFormOptions() {
   return {
     title: '角色',

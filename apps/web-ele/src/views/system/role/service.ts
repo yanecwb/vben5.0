@@ -27,3 +27,7 @@ export const updateRolePermission = (params: any) =>
     //   return qs.stringify(params, { indices: false });
     // },
   );
+
+// 測試組件API
+export const taskRevenueReportApi = (params: any) =>
+  requestClient.get('/report/taskReport/query', { params });

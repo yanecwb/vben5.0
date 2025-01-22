@@ -7,7 +7,7 @@ import { queryRoles, deleteRole } from './service';
 
 import { BaseCrudService } from '#/components/Crud/base';
 
-import { useVbenModal, VbenButton } from '@vben/common-ui';
+import { useVbenModal } from '@vben/common-ui';
 import ActionModal from './modules/ActionModal';
 
 export default defineComponent({
@@ -44,9 +44,17 @@ export default defineComponent({
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning',
+            beforeClose: async (action, instance, done) => {
+              if (action) {
+                instance.confirmButtonLoading = true;
+                instance.confirmButtonText = 'Loading...';
+                await deleteRole({ id });
+                instance.confirmButtonLoading = false;
+              }
+              done();
+            },
           },
         );
-        await deleteRole({ id });
         ElMessage({
           type: 'success',
           message: '删除成功',

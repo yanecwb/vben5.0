@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="max-h-[70vh] overflow-auto">
     <ElTable
       stripe
       border
@@ -18,7 +18,7 @@
       :indent="4"
       :row-key="tableOption.lazy ? 'keyid' : ''"
       :lazy="tableOption.lazy"
-      :load="(e) => emit('load', e)"
+      :load="(row,treeNode,resolve) => emit('load', row,treeNode,resolve)"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       :row-class-name="tableOption.tableRowClassName"
       @current-change="
@@ -361,8 +361,8 @@
 
       <ElTableColumn
         v-if="tableOption.menu"
+        :fixed="tableOption.actionFixed"
         align="center"
-        fixed="right"
         label="操作"
         :min-width="tableOption.actionWidth"
       >
@@ -475,6 +475,7 @@ const formatSortChange = (val: Record<string, any>): SortParams => {
     sortParams.descs = [];
     sortParams.ascs = [];
   }
+  emit('sortChange',sortParams)
   return sortParams;
 };
 const limitLineStyle = (line: number): any => ({
@@ -492,8 +493,17 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-:deep(.el-table__header tr th) {
-  color: #333;
-  background-color: #eff2f7 !important;
+:deep(.el-table__header) {
+  & tr th {
+    font-family: monospace;
+    color: rgb(51 51 51 / 90%);
+    background-color: #eff2f7 !important;
+  }
+
+  & .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>
