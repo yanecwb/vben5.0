@@ -24,7 +24,7 @@
       <slot name="content"></slot>
     </template>
     <template v-if="tableOptions" #table>
-      <div class="card-body border-radius-8">
+      <div class="border-radius-8">
         <div
           class="display-row justify-content-between align-items-start mg-0-0-10"
         >

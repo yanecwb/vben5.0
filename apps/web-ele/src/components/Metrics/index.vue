@@ -30,9 +30,9 @@
           <template #item="{ element }">
             <el-tag
               v-show="!element.hide"
+              style="color:hsl(var(--heavy-foreground))"
               type="info"
               class="mg-0-10-0-0 mg-0-0-10 metrics-item draghandle cursor-move select-none"
-              :style="'color:#1f2126e6'"
             >
               <span class="icon-[uil--draggabledots] mg-0-2-0-0"></span>
               <span> {{ element.label }}</span>

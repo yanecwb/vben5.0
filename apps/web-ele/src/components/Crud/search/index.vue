@@ -1,5 +1,5 @@
 <template>
-  <div class="card-body mg-0-0-12 border-radius-8 search-container">
+  <div class=" mg-0-0-12 border-radius-8 search-container">
     <div class="display-row search-father flex-wrap">
       <!--  编辑筛选项  -->
       <div class="search-left-action">
@@ -476,13 +476,13 @@ onUnmounted(() => {
 
 .search-border {
   height: 36px;
-  border: 1px solid #ebeef2;
+  border: 1px solid hsl(var(--border));
 }
 
 .search-label {
   padding-left: 8px;
   font-size: 12px;
-  color: #1f2126e5;
+  // color: #1f2126e5;
   cursor: default;
   border-right: 0;
   border-top-right-radius: 0;

@@ -125,9 +125,9 @@ export default defineComponent({
       <Page>
         <ElRow>
           <ElCol span={6}>
-            <ElCard class="bg-background rounded-md">
-              <div class="card h-[80vh] overflow-auto">
-                <div class="card-body pd-20">
+            <ElCard class="rounded-md">
+              <div class="h-[80vh] overflow-auto">
+                <div class="pd-20">
                   <div class="mg-0-0-20">
                     <ElButton type="primary" style="width: 100%">
                       管理端平台
@@ -148,8 +148,8 @@ export default defineComponent({
           </ElCol>
           <ElCol span={18} class="pd-0-5">
             <ElCard class="rounded-md">
-              <div class="card h-[80vh] overflow-auto">
-                <div class="card-body pd-20">
+              <div class="h-[80vh] overflow-auto">
+                <div class=" pd-20">
                   <h5 class="mg-0-0-20">
                     {isCreate
                       ? `新增${addMenuType.value === 'menu' ? '同级菜单' : '子菜单'}`

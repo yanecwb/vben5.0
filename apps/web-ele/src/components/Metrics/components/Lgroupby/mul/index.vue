@@ -11,7 +11,7 @@
       :type="selectedFieldGroup.includes(item.prop) ? undefined : 'info'"
       size="small"
       class="mg-0-10-0-0 cursor-pointer"
-      :style="selectedFieldGroup.includes(item.prop) ? '' : 'color:#1f2126e6'"
+      :style="selectedFieldGroup.includes(item.prop) ? '' : 'color:hsl(var(--heavy-foreground))'"
       @click="handleChangeSelect(item.prop)"
     >
       <span  v-show="selectedFieldGroup.includes(item.prop)" class="icon-[material-symbols--check]"></span>

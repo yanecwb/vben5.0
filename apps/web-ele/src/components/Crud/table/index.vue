@@ -495,9 +495,8 @@ onMounted(() => {
 <style scoped lang="scss">
 :deep(.el-table__header) {
   & tr th {
-    font-family: monospace;
-    color: rgb(51 51 51 / 90%);
-    background-color: #eff2f7 !important;
+    color: hsl(var(--heavy-foreground));
+    background-color: hsl(var(--border)) !important;
   }
 
   & .cell {

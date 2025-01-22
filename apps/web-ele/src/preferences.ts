@@ -35,6 +35,5 @@ export const overridesPreferences = defineOverridesPreferences({
   },
   widget: {
     notification: false,
-    themeToggle: false,
   },
 });

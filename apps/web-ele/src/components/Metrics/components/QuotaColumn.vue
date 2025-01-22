@@ -18,10 +18,10 @@
                 children: 'children',
                 label: 'label',
               }"
+              :default-checked-keys="defaultCheckedKeys"
               show-checkbox
               node-key="prop"
               default-expand-all
-              :default-checked-keys="defaultCheckedKeys"
               @check="onCheckChange"
             ></el-tree>
           </div>
@@ -222,8 +222,8 @@ defineExpose({
   width: 188px;
   padding: 10px;
   margin-right: 20px;
-  color: #1f2126;
-  background: #f5f6f7;
+  color: hsl(var(--heavy-foreground));
+  background: hsl(var(--border));
   border-radius: 4px;
 }
 
