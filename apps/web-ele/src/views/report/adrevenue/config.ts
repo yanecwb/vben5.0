@@ -18,6 +18,15 @@ import {
   type DisplayFieldDisabled,
 } from '#/components/Crud/types/table';
 
+import {
+  getPublisherOptions,
+  getUserOptions,
+  getPartnerOptions,
+  getPartnerAdUnitOptions,
+  getPartnerAppOptions,
+  getAdUnitOptions,
+  getAppOptions,
+} from '#/api/core/selectList';
 export const tableOptions = (): TableOptions => {
   return {
     align: ColumnAlign.Center,
@@ -209,6 +218,7 @@ export const searchOption = (): SearchParam => {
         .setDefault(false)
         .setPlaceholder('请选择')
         .setValue(new SelectValue('publisherBdId'))
+        .setApi(getUserOptions, { roleId: 106 })
         .build(),
     )
     .add(
@@ -217,6 +227,7 @@ export const searchOption = (): SearchParam => {
         .setDefault(true)
         .setPlaceholder('请选择')
         .setValue(new SelectValue('publisherId'))
+        .setApi(getPublisherOptions)
         .build(),
     )
     .add(
@@ -225,6 +236,7 @@ export const searchOption = (): SearchParam => {
         .setDefault(true)
         .setPlaceholder('请选择')
         .setValue(new SelectValue('appId'))
+        .setApi(getAppOptions)
         .build(),
     )
     .add(
@@ -233,6 +245,7 @@ export const searchOption = (): SearchParam => {
         .setDefault(true)
         .setPlaceholder('请选择Ad Unit')
         .setValue(new SelectValue('adUnitId'))
+        .setApi(getAdUnitOptions)
         .build(),
     )
     .add(
@@ -241,6 +254,7 @@ export const searchOption = (): SearchParam => {
         .setDefault(false)
         .setPlaceholder('请选择Partner')
         .setValue(new SelectValue('partnerId'))
+        .setApi(getPartnerOptions)
         .build(),
     )
     .add(
@@ -249,6 +263,7 @@ export const searchOption = (): SearchParam => {
         .setDefault(false)
         .setPlaceholder('请选择Partner APP')
         .setValue(new SelectValue('partnerAppId'))
+        .setApi(getPartnerAppOptions)
         .build(),
     )
     .add(
@@ -257,6 +272,7 @@ export const searchOption = (): SearchParam => {
         .setDefault(false)
         .setPlaceholder('请选择Partner AdUnit')
         .setValue(new SelectValue('partnerAdUnitId'))
+        .setApi(getPartnerAdUnitOptions)
         .build(),
     )
     .build();

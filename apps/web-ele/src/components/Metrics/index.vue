@@ -22,6 +22,7 @@
           :list="props.dragMetricsColumns"
           :animation="100"
           :force-fallback="true"
+          :itemKey="getUuid()"
           drag-class="drag-class"
           chosen-class="drag-class"
           handle=".draghandle"
@@ -78,7 +79,7 @@ import { type ColumnOption } from '#/components/Crud/types/table';
 import { ElTag } from 'element-plus';
 import draggable from 'vuedraggable';
 import QuotaColumn from './components/QuotaColumn.vue';
-import { sleep } from '#/utils/global';
+import { getUuid, sleep } from '#/utils/global';
 
 const props = defineProps({
   dragMetricsColumns: {

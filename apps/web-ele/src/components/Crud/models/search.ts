@@ -298,12 +298,7 @@ export class SearchItemBuild {
         this.value instanceof SelectValue ||
         this.value instanceof MultiSelectValue
       ) {
-        this.value.setOptions([
-          {
-            label: '全部',
-            value: 1,
-          },
-        ]); //_res
+        this.value.setOptions(_res);
       }
     });
     return this;

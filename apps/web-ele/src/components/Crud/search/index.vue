@@ -51,7 +51,6 @@
               >
                 <el-input
                   v-model="searchItem.Value.value"
-                  v-trim
                   :placeholder="searchItem.Placeholder"
                   clearable
                   :class="{ 'search-input-border': !searchItem.Default }"
@@ -196,7 +195,6 @@
                   >
                     <el-input
                       v-model="searchItem.Value.value[0]"
-                      v-trim
                       size="small"
                       style="width: 45%; margin-left: 3px"
                       placeholder="开始"
@@ -213,7 +211,6 @@
                     <el-input
                       size="small"
                       v-model="searchItem.Value.value[1]"
-                      v-trim
                       style="width: 45%"
                       placeholder="结束"
                       clearable

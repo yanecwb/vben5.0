@@ -383,7 +383,7 @@
 import sortable from 'sortable';
 import { cloneDeep, isEmpty } from '@vben/utils';
 import { createEmptySortParams } from '../config';
-import { ElTable, ElTableColumn, ElTooltip } from 'element-plus';
+import { ElTable, ElTableColumn, ElTooltip,ElImage } from 'element-plus';
 import type { ColumnOption, SortParams, TableOptions } from '../types/table';
 import JsonView from '../../JsonViewer/index.vue';
 
