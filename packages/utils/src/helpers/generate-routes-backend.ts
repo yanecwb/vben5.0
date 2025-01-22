@@ -53,7 +53,11 @@ function convertRoutes(
 
     // layout转换
     if (path === '/dashboard') {
-      route.component = pageMap['/dashboard/analytics/index'];
+      route.component = layoutMap[component]; //pageMap['/dashboard/analytics/index'];
+      if (!route.children?.length) {
+        const { children }: any = routes.find((i) => i.children?.length)!;
+        route.redirect = children[0].path;
+      }
     } else if (component && layoutMap[component]) {
       route.component = layoutMap[component];
       // 页面组件转换
@@ -98,10 +102,10 @@ function transformMenuRoutes(
       meta: {
         title: menuItem.label,
         icon:
-          menuItem.icon || (isChildRoute ? undefined : 'lucide:codesandbox'),
+          menuItem.icon || (isChildRoute ? 'lucide:fan' : 'lucide:app-window'),
         order: menuItem.orderNum,
         affixTab: isChildRoute ? menuItem.affixTab : undefined,
-        keepAlive: isChildRoute,
+        keepAlive: isChildRoute, 
       },
       name: isChildRoute ? menuItem.href : menuItem.name,
       path: routePath,
