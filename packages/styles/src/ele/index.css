@@ -627,3 +627,33 @@ body,
 .text-black {
   color: #000;
 }
+
+
+.badge-soft-primary {
+  color: var(--el-color-primary);
+  background-color: var(--el-color-primary-light-9)
+}
+.badge-soft-success {
+  color: var(--el-color-success);
+  background-color: var(--el-color-success-light-9)
+}
+.badge-soft-info {
+  color: var(--el-color-info);
+  background-color: var(--el-color-info-light-9);
+}
+.badge-soft-danger {
+  color:var(--el-color-danger);
+  background-color: var(--el-color-danger-light-9);
+}
+.badge-soft-warning {
+  color: var(--el-color-warning);
+  background-color:var(--el-color-warning-light-9)
+}
+/* .badge-soft-dark {
+  color: $--color-dark;
+  background-color: rgba($--color-dark, 0.18);
+}
+.badge-soft-light {
+  color: $--color-light;
+  background-color: rgba($--color-light, 0.18);
+} */

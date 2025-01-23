@@ -75,14 +75,15 @@ export class NumericalIntervalValue implements INumericalIntervalValue {
 export class SelectValue implements ISelectValue {
   key: string;
   value: string;
-  options: any[] = [];
+  options: Option[] = [];
   clearable = true;
   filterable = true;
   hide = false;
 
-  constructor(key: string, value: any = '') {
+  constructor(key: string, value: any = '', options?: Option[]) {
     this.key = key;
     this.value = value;
+    options && (this.options = options);
   }
 
   setClearable(b: boolean) {
@@ -97,7 +98,7 @@ export class SelectValue implements ISelectValue {
     this.hide = b;
   }
 
-  setOptions(options: any[]) {
+  setOptions(options: Option[]) {
     this.options = options;
   }
 
@@ -106,8 +107,6 @@ export class SelectValue implements ISelectValue {
   }
 
   get ValueLabel(): string {
-    console.log(this.options, this.value);
-    // eslint-disable-next-line eqeqeq
     const item = this.options.find((item) => item.value == this.value);
     return item ? item.label : '';
   }
@@ -120,7 +119,7 @@ export class SelectValue implements ISelectValue {
 export class MultiSelectValue implements IMultiSelectValue {
   key: string;
   value: any[];
-  options: any[] = [];
+  options: Option[] = [];
   valueType: SelectValueType;
   clearable = true;
   filterable = true;
@@ -131,10 +130,12 @@ export class MultiSelectValue implements IMultiSelectValue {
     key: string,
     value: any[] = [],
     valueType: SelectValueType = SelectValueType.Array,
+    options?: Option[],
   ) {
     this.key = key;
     this.value = value;
     this.valueType = valueType;
+    options && (this.options = options);
   }
 
   setClearable(b: boolean) {
@@ -158,8 +159,6 @@ export class MultiSelectValue implements IMultiSelectValue {
   }
 
   get ValueLabel(): any[] {
-    console.log(this.options, this.value);
-    // eslint-disable-next-line eqeqeq
     const res: any[] = [];
     this.options.forEach((item) => {
       if (this.value.includes(item.value)) {

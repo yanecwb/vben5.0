@@ -113,3 +113,13 @@ export const pickerQuickOptions = {
     }
   ]
 }
+
+export enum TAG_DEFAULT {
+  Primary = 'badge badge-soft-primary',
+  Success = 'badge badge-soft-success',
+  Info = 'badge badge-soft-info',
+  Danger = 'badge badge-soft-danger',
+  Warning = 'badge badge-soft-warning',
+  Dark = 'badge badge-soft-dark',
+  Light = 'badge badge-soft-light'
+}

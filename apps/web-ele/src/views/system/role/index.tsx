@@ -45,7 +45,7 @@ export default defineComponent({
             cancelButtonText: '取消',
             type: 'warning',
             beforeClose: async (action, instance, done) => {
-              if (action) {
+              if (action=== 'confirm') {
                 instance.confirmButtonLoading = true;
                 instance.confirmButtonText = 'Loading...';
                 await deleteRole({ id });

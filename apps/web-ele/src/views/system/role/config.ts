@@ -9,8 +9,9 @@ import { formatDateTime } from '#/utils/global';
 export const tableOptions = (): TableOptions => {
   return {
     menu: true,
+    title: '角色管理',
     align: ColumnAlign.Center,
-    actionWidth: 40,
+    actionWidth: 80,
     columns: [
       {
         prop: 'id',
