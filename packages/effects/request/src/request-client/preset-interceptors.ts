@@ -96,23 +96,32 @@ export const errorMessageResponseInterceptor = (
 
       switch (status) {
         case 400: {
-          errorMessage = $t('ui.fallback.http.badRequest');
+          errorMessage = '400  ' + $t('ui.fallback.http.badRequest');
           break;
         }
         case 401: {
-          errorMessage = $t('ui.fallback.http.unauthorized');
+          errorMessage = '401  ' + $t('ui.fallback.http.unauthorized');
           break;
         }
         case 403: {
-          errorMessage = $t('ui.fallback.http.forbidden');
+          errorMessage = '403  ' + $t('ui.fallback.http.forbidden');
           break;
         }
         case 404: {
-          errorMessage = $t('ui.fallback.http.notFound');
+          errorMessage = '404  ' + $t('ui.fallback.http.notFound');
           break;
         }
         case 408: {
-          errorMessage = $t('ui.fallback.http.requestTimeout');
+          errorMessage = '408  ' + $t('ui.fallback.http.requestTimeout');
+          break;
+        }
+        case 500:
+        case 501:
+        case 502:
+        case 503:
+        case 504:
+        case 505: {
+          errorMessage = '500  ' + $t('ui.fallback.http.internalServerError');
           break;
         }
         default: {

@@ -27,9 +27,6 @@ catalogs:
     '@eslint/js':
       specifier: ^9.17.0
       version: 9.17.0
-    '@faker-js/faker':
-      specifier: ^9.3.0
-      version: 9.3.0
     '@iconify/json':
       specifier: ^2.2.293
       version: 2.2.293
@@ -78,9 +75,6 @@ catalogs:
     '@types/html-minifier-terser':
       specifier: ^7.0.2
       version: 7.0.2
-    '@types/jsonwebtoken':
-      specifier: ^9.0.7
-      version: 9.0.7
     '@types/lodash.clonedeep':
       specifier: ^4.5.9
       version: 4.5.9
@@ -258,9 +252,6 @@ catalogs:
     globals:
       specifier: ^15.14.0
       version: 15.14.0
-    h3:
-      specifier: ^1.13.0
-      version: 1.13.0
     happy-dom:
       specifier: ^16.5.3
       version: 16.5.3
@@ -276,9 +267,6 @@ catalogs:
     jsonc-eslint-parser:
       specifier: ^2.4.0
       version: 2.4.0
-    jsonwebtoken:
-      specifier: ^9.0.2
-      version: 9.0.2
     lint-staged:
       specifier: ^15.3.0
       version: 15.3.0
@@ -732,8 +720,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3))
       sm-crypto:
-        specifier: ^0.3.13
-        version: 0.3.13
+        specifier: ^0.3.11
+        version: 0.3.11
       sortable:
         specifier: ^2.0.0
         version: 2.0.0
@@ -9140,8 +9128,8 @@ packages:
     resolution: {integrity: sha512-bSiSngZ/jWeX93BqeIAbImyTbEihizcwNjFoRUIY/T1wWQsfsm2Vw1agPKylXvQTU7iASGdHhyqRlqQzfz+Htg==}
     engines: {node: '>=18'}
 
-  sm-crypto@0.3.13:
-    resolution: {integrity: sha512-ztNF+pZq6viCPMA1A6KKu3bgpkmYti5avykRHbcFIdSipFdkVmfUw2CnpM2kBJyppIalqvczLNM3wR8OQ0pT5w==}
+  sm-crypto@0.3.11:
+    resolution: {integrity: sha512-qBIyyTknmwfF8nStKHshL4Caw1AAfkar8B/voiEReENeCLtudbPt6B16QJ1mgAn1B4w0T+QDcu5XzGc7s22fWw==}
 
   smart-buffer@4.2.0:
     resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}
@@ -18669,7 +18657,7 @@ snapshots:
       ansi-styles: 6.2.1
       is-fullwidth-code-point: 5.0.0
 
-  sm-crypto@0.3.13:
+  sm-crypto@0.3.11:
     dependencies:
       jsbn: 1.1.0
 

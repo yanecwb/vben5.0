@@ -10,6 +10,7 @@ import { BaseCrudService } from '#/components/Crud/base';
 import { useVbenModal } from '@vben/common-ui';
 import ActionModal from './modules/ActionModal';
 
+import { sleep } from '#/utils/global';
 export default defineComponent({
   name: 'role',
   setup() {
@@ -36,31 +37,34 @@ export default defineComponent({
     });
 
     const confirmDelete = async (id: string | number) => {
-      try {
-        await ElMessageBox.confirm(
-          '此操作将永久删除该角色, 是否继续?',
-          '温馨提示',
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-            beforeClose: async (action, instance, done) => {
-              if (action=== 'confirm') {
+      await ElMessageBox.confirm(
+        '此操作将永久删除该角色, 是否继续?',
+        '温馨提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          beforeClose: async (action, instance, done) => {
+            try {
+              if (action === 'confirm') {
                 instance.confirmButtonLoading = true;
                 instance.confirmButtonText = 'Loading...';
                 await deleteRole({ id });
-                instance.confirmButtonLoading = false;
               }
               done();
-            },
+            } catch (e) {
+            } finally {
+              instance.confirmButtonLoading = false;
+              instance.confirmButtonText = '确定';
+            }
           },
-        );
-        ElMessage({
-          type: 'success',
-          message: '删除成功',
-        });
-        await getTableData();
-      } catch (e) {}
+        },
+      );
+      ElMessage({
+        type: 'success',
+        message: '删除成功',
+      });
+      await getTableData();
     };
 
     const [Modal, modalApi] = useVbenModal({

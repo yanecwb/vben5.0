@@ -35,5 +35,7 @@ const useVbenForm = useForm<ComponentType>;
 
 export { useVbenForm, z };
 
-export type VbenFormSchema = FormSchema<ComponentType>;
-export type { VbenFormProps };
+export interface VbenFormSchema extends FormSchema<ComponentType> {
+  // show?: boolean;
+}
+export type { VbenFormProps ,ComponentType};

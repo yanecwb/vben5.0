@@ -1,24 +1,7 @@
-import {
-  defineComponent,
-  reactive,
-  shallowRef,
-  nextTick,
-  ref,
-  onMounted,
-} from 'vue';
-import {
-  addMenu,
-  deleteMenuApi,
-  getMenuDetail,
-  getMenuTree,
-  updateMenu,
-} from './service';
+import { defineComponent, shallowRef, nextTick, ref, onMounted } from 'vue';
+import { deleteMenuApi, getMenuDetail, getMenuTree } from './service';
 import { type Menu } from './type';
-import {
-  createEmptyMenu,
-  createEmptyPermission,
-  permissionTypeOptions,
-} from './config';
+import { addMenuTypeMap, createEmptyMenu } from './config';
 import {
   ElMessage,
   ElRow,
@@ -27,136 +10,198 @@ import {
   ElMessageBox,
   ElTree,
   ElCard,
+  ElAlert,
 } from 'element-plus';
 import { isEmpty } from '@vben/utils';
 import { Page } from '@vben/common-ui';
+import FromModule from './modules/Form';
+import type Node from 'element-plus/es/components/tree/src/model/node.mjs';
 
 export default defineComponent({
   name: 'menu',
   setup() {
     const isCreate = shallowRef<boolean>(false);
-    const addMenuType = shallowRef<'menu' | 'submenu'>('menu');
+    const addMenuType = shallowRef<'editMenu' | 'addNextMenu' | 'addSameMenu'>(
+      'editMenu',
+    );
 
-    const menuTree = ref(null);
+    const menuTree = ref<InstanceType<typeof ElTree>>();
     let currentSelectedMenu = ref<Menu>(createEmptyMenu());
-    let menuForm = reactive<Menu>(createEmptyMenu());
+    let menuForm = ref<Menu>(createEmptyMenu());
     let menuTreeData = ref<Menu[]>([]);
 
-    const treeDataLoading = shallowRef<boolean>(false);
-    const formDataLoading = shallowRef<boolean>(false);
-    const saveMenuLoading = shallowRef<boolean>(false);
-    const menuLoading = shallowRef<boolean>(false);
+    const treeDataLoading = shallowRef<boolean>(false); //樹組件loading
+    const formDataLoading = shallowRef<boolean>(false); ////表单組件loading
 
     const fetchMenuTreeData = async () => {
       try {
         treeDataLoading.value = true;
-        const data = await getMenuTree();
-
-        if (!isEmpty(data)) {
-          menuTreeData.value = data;
-
-          // 设置每条数据额外属性
-          setMenuStatus(menuTreeData.value);
-
-          // 设置菜单默认选中
-          nextTick(() => {
-            menuTree.value &&
-              (menuTree.value as any).setCurrentNode(menuTreeData.value[0]);
-            handleNodeClick(menuTreeData.value[0] as Menu);
+        formDataLoading.value = true;
+        const res: Menu[] = (await getMenuTree()) ?? [];
+        const setMenuStatus = (arr: Menu[]) => {
+          arr.forEach((item: any) => {
+            if (!isEmpty(item.children)) {
+              setMenuStatus(item.children);
+            } else {
+              item._showDeleteBtn = false;
+            }
           });
-        }
+        };
+        setMenuStatus(res);
+        menuTreeData.value = res;
       } finally {
         treeDataLoading.value = false;
       }
     };
-
-    const setMenuStatus = (menu: any[]) => {
-      menu.forEach((item: any) => {
-        if (!isEmpty(item.children)) {
-          setMenuStatus(item.children);
-        } else {
-          // this.$set(item, '_showDeleteBtn', false)
-        }
-      });
-    };
-
     const handleNodeClick = async (data: Menu) => {
       isCreate.value = false;
+      addMenuType.value = 'editMenu';
       try {
-        menuLoading.value = true;
+        formDataLoading.value = true;
         const resp = await getMenuDetail({
           id: data.id + '',
         });
-        currentSelectedMenu = { ...resp.data, ...{ children: data.children } };
-        menuForm = resp.data;
+        currentSelectedMenu.value = {
+          ...resp,
+          ...{ children: data.children },
+        };
+        menuForm.value = resp;
       } finally {
-        menuLoading.value = false;
+        formDataLoading.value = false;
       }
     };
-    const addMenu = (type: 'menu' | 'submenu') => {
-      menuLoading.value = false;
+
+    const addMenu = (type: 'editMenu' | 'addNextMenu' | 'addSameMenu') => {
       isCreate.value = true;
       addMenuType.value = type;
-      menuForm = createEmptyMenu();
+      menuForm.value = createEmptyMenu();
     };
 
     const cancelCreate = () => {
       isCreate.value = false;
-      menuForm = currentSelectedMenu.value;
+      addMenuType.value = 'editMenu';
+      menuForm.value = currentSelectedMenu.value;
     };
 
-    const deleteMenu = (data: Menu) => {
-      ElMessageBox.confirm('此操作将永久删除该菜单, 是否继续?').then(
-        async () => {
-          await deleteMenuApi({
-            id: data.id + '',
-          });
-          ElMessage.success('删除成功');
-          fetchMenuTreeData();
-        },
-      );
+    const deleteMenu = async (data: Menu) => {
+      try {
+        await ElMessageBox.confirm(
+          '此操作将永久删除该菜单/按钮, 删除后不可恢复, 是否继续?',
+          '温馨提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+            beforeClose: async (action, instance, done) => {
+              if (action === 'confirm') {
+                instance.confirmButtonLoading = true;
+                instance.confirmButtonText = 'Loading...';
+                await deleteMenuApi({ id: data.id + '' });
+                instance.confirmButtonLoading = false;
+              }
+              done();
+            },
+          },
+        );
+        ElMessage({
+          type: 'success',
+          message: '删除成功',
+        });
+        await fetchMenuTreeData();
+      } catch (e) {}
     };
 
     onMounted(async () => {
       await fetchMenuTreeData();
+      nextTick(() => {
+        menuTree.value?.setCurrentNode(
+          menuTreeData.value[0] as unknown as Node,
+          true,
+        );
+        handleNodeClick(menuTreeData.value[0] as Menu);
+      });
     });
 
     return () => (
       <Page>
         <ElRow>
           <ElCol span={6}>
-            <ElCard class="rounded-md">
-              <div class="h-[80vh] overflow-auto">
-                <div class="pd-20">
-                  <div class="mg-0-0-20">
-                    <ElButton type="primary" style="width: 100%">
-                      管理端平台
-                    </ElButton>
-                  </div>
-                  {/* {false && <ElButton class="mg-0-0-20 w-100">Create</ElButton>} */}
-                  <ElTree
-                    ref="menuTree"
-                    data={menuTreeData.value}
-                    show-checkbox
-                    node-key="id"
-                    highlight-current
-                    props={{ children: 'children', label: 'name' }}
-                  ></ElTree>
-                </div>
-              </div>
+            <ElCard class="h-[80vh] overflow-auto rounded-md">
+              <ElButton type="primary" class="mb-[20px] w-full">
+                管理端平台
+              </ElButton>
+              <ElTree
+                v-loading={treeDataLoading.value}
+                ref={menuTree}
+                data={menuTreeData.value}
+                node-key="id"
+                default-expand-all
+                highlight-current
+                props={{ children: 'children', label: 'name' }}
+                onNode-click={handleNodeClick}
+              >
+                {{
+                  default: ({ node, data }: any) => (
+                    <div
+                      class="flex w-full items-center justify-between"
+                      onMouseover={() => (data._showDeleteBtn = true)}
+                      onMouseout={() => (data._showDeleteBtn = false)}
+                    >
+                      <span>{node.label}</span>
+                      <span
+                        v-show={data._showDeleteBtn}
+                        class="icon-[icon-park-outline--delete] ml-[50px] text-[#e95f5fcc]"
+                        onClick={() => deleteMenu(data)}
+                      ></span>
+                    </div>
+                  ),
+                }}
+              </ElTree>
             </ElCard>
           </ElCol>
-          <ElCol span={18} class="pd-0-5">
-            <ElCard class="rounded-md">
-              <div class="h-[80vh] overflow-auto">
-                <div class=" pd-20">
-                  <h5 class="mg-0-0-20">
-                    {isCreate
-                      ? `新增${addMenuType.value === 'menu' ? '同级菜单' : '子菜单'}`
-                      : '编辑菜单'}
-                  </h5>
-                </div>
+          <ElCol span={18} class="pl-1">
+            <ElCard class="h-[80vh] overflow-auto rounded-md">
+              <div class="mb-3 flex items-center justify-between">
+                <ElAlert
+                  title="正在操作"
+                  description={
+                    addMenuTypeMap[addMenuType.value].text +
+                    '-' +
+                    currentSelectedMenu.value.name
+                  }
+                  type="warning"
+                  closable={false}
+                  show-icon
+                  class="!mr-3 flex-1"
+                />
+                {isCreate.value ? (
+                  <ElButton type="primary" plain onClick={cancelCreate}>
+                    返回
+                  </ElButton>
+                ) : (
+                  <>
+                    <ElButton
+                      type="primary"
+                      plain
+                      onClick={() => addMenu('addSameMenu')}
+                    >
+                      新增同级
+                    </ElButton>
+                    <ElButton
+                      type="success"
+                      plain
+                      onClick={() => addMenu('addNextMenu')}
+                    >
+                      新增下级
+                    </ElButton>
+                  </>
+                )}
               </div>
+              <FromModule
+                currentMenuForm={currentSelectedMenu.value}
+                addMenuType={addMenuType.value}
+                v-loading={formDataLoading.value}
+              />
             </ElCard>
           </ElCol>
         </ElRow>

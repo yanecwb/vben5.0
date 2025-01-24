@@ -16,7 +16,7 @@ export const tableOptions = (): TableOptions => {
       {
         prop: 'id',
         label: 'ID',
-        minWidth: 20,
+        minWidth: 30,
       },
       {
         prop: 'name',

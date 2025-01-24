@@ -22,7 +22,7 @@ import { refreshTokenApi } from './core';
 import SignUtil from './utils/sign';
 import signMd5Utils from './utils/signMd5Utils';
 import { smCrypto } from './utils/smcrypto';
-import { dataEmpty } from '@vben/utils';
+import { dataEmpty, isEmpty } from '@vben/utils';
 import { sleep } from '#/utils/global';
 
 const { apiURL } = useAppConfig(import.meta.env, import.meta.env.PROD);
@@ -76,6 +76,8 @@ function createRequestClient(baseURL: string) {
         config.url?.includes('/auth/oauth/token') &&
         'Basic aGl2ZWFkc190Z19tZ210X3BsYXRmb3JtOmhpdmVhZHNfdGcjMjA0OA==';
 
+      config.headers['Content-Type'] = 'application/json';
+
       config.headers.timestamp = timestamp;
       config.headers.Authorization =
         clientPlatformToken || formatToken(accessStore.accessToken); //+'1';
@@ -95,6 +97,7 @@ function createRequestClient(baseURL: string) {
       );
       config.headers.sign = signParam;
 
+      /* 处理参数 */
       if (config.params) {
         console.log('request params', config.params);
         function processParams(
@@ -112,16 +115,13 @@ function createRequestClient(baseURL: string) {
 
       if (config.data) {
         console.log('request data', signMd5Utils.sortAsc(config.data));
-        function processData(
-          data: Record<string, any> | undefined,
-        ): string | undefined {
-          if (!data || Object.keys(data).length === 0) {
-            return undefined;
-          }
-          const sortedData = signMd5Utils.sortAsc(data);
-          return smCrypto(JSON.stringify(sortedData));
+        function processData(data: Record<string, any>): string | undefined {
+          if (isEmpty(data)) return undefined;
+          return smCrypto(JSON.stringify(signMd5Utils.sortAsc(data)));
         }
         config.data = processData(config.data);
+        console.log(config.data);
+        
       }
 
       return config;

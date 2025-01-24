@@ -3,8 +3,8 @@ import { requestClient } from '#/api/request';
 export const createRole = (data: any) =>
   requestClient.post('/admin/role', data);
 
-export const deleteRole = (params: any) =>
-  requestClient.delete(`/admin/role`, { params });
+export const deleteRole = (data: any) =>
+  requestClient.delete(`/admin/role`,  data );
 
 export const updateRole = (data: any) => requestClient.put(`/admin/role`, data);
 
@@ -22,7 +22,7 @@ export const getRolePermissionIds = (params: any) =>
 export const updateRolePermission = (params: any) =>
   requestClient.put(
     `/admin/role/menuIds`,
-    { params },
+    params,
     // paramsSerializer: (params) => {
     //   return qs.stringify(params, { indices: false });
     // },

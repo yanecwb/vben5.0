@@ -252,6 +252,8 @@ export interface FormSchema<
   rules?: FormSchemaRuleType;
   /** 后缀 */
   suffix?: CustomRenderType;
+  /** 是否隐藏 */
+  hide?: boolean;
 }
 
 export interface FormFieldProps extends FormSchema {

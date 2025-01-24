@@ -1,5 +1,16 @@
-import  { type Menu, MenuCagegory, MenuType, type Permission } from './type'
+import { type Menu, MenuCagegory, MenuType, type Permission } from './type';
 
+export const addMenuTypeMap = {
+  editMenu: {
+    text: '编辑',
+  },
+  addNextMenu: {
+    text: '新增下级',
+  },
+  addSameMenu: {
+    text: '新增同级',
+  },
+};
 export const createEmptyMenu = (): Menu => {
   return {
     id: 0,
@@ -14,9 +25,9 @@ export const createEmptyMenu = (): Menu => {
     resource: '',
     orderNum: 1,
     description: '',
-    children: []
-  }
-}
+    children: [],
+  };
+};
 
 export const createEmptyPermission = (): Permission => {
   return {
@@ -24,9 +35,9 @@ export const createEmptyPermission = (): Permission => {
     typeName: 'action',
     name: '',
     resource: '',
-    category: MenuCagegory.UserPlatform
-  }
-}
+    category: MenuCagegory.UserPlatform,
+  };
+};
 
 export const permissionTypeOptions = [
   {
@@ -34,42 +45,42 @@ export const permissionTypeOptions = [
     options: [
       {
         label: '内容(是否显示)',
-        value: 'content'
+        value: 'content',
       },
       {
         label: '动作(是否显示)',
-        value: 'action'
+        value: 'action',
       },
       {
         label: '列表字段&过滤(是否显示)',
-        value: 'filter_and_column'
+        value: 'filter_and_column',
       },
       {
         label: '列表过滤条件(是否显示)',
-        value: 'filter'
+        value: 'filter',
       },
       {
         label: '列表字段(是否显示)',
-        value: 'column'
-      }
-    ]
+        value: 'column',
+      },
+    ],
   },
   {
     label: '是否允许操作',
     options: [
       {
         label: '动作(是否允许操作)',
-        value: 'disable_action'
-      }
-    ]
+        value: 'disable_action',
+      },
+    ],
   },
   {
     label: '数据权限',
     options: [
       {
         label: '数据权限',
-        value: 'data_permission'
-      }
-    ]
-  }
-]
+        value: 'data_permission',
+      },
+    ],
+  },
+];

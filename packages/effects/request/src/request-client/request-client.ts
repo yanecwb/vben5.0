@@ -106,6 +106,7 @@ class RequestClient {
       const response: AxiosResponse<T> = await this.instance({
         url,
         ...config,
+        withCredentials: true,
       });
       return response as T;
     } catch (error: any) {

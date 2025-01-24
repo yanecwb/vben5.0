@@ -11,7 +11,7 @@ import { useVbenModal } from '@vben/common-ui';
 import ActionModal from './modules/ActionModal';
 
 export default defineComponent({
-  name: 'SysUserManage',
+  name: 'user',
   setup() {
     const {
       tableDataLoading,
@@ -38,7 +38,7 @@ export default defineComponent({
     const confirmDelete = async (id: string | number) => {
       try {
         await ElMessageBox.confirm(
-          '此操作将永久删除该账号, 是否继续?',
+          '此操作将永久删除该员工账号, 是否继续?',
           '温馨提示',
           {
             confirmButtonText: '确定',
